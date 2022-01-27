@@ -54,3 +54,64 @@ function game() {
         console.log(playRound(playerChoice, computerPlay()));
     }
 }
+
+const buttons = document.querySelectorAll(".rps");
+const h1 = document.querySelector('.display');
+const humanScore = document.querySelector('.human > span');
+const compScore = document.querySelector('.computer > span');
+const winner = document.querySelector('.winner-declaration > h1');
+const playAgainBtn = document.createElement('button');
+const reset = document.querySelector('.reset');
+
+playAgainBtn.textContent = "Play Again";
+
+function resetGame() {
+    humanScore.textContent = 0;
+    compScore.textContent = 0;
+    winner.textContent = '';
+    reset.removeChild(playAgainBtn);
+    enableBtns();
+}
+
+function disableBtns() {
+    buttons.forEach(b => {
+        b.disabled = true;
+    })
+}
+
+function enableBtns() {
+    buttons.forEach(b => {
+        b.disabled = false;
+    })
+}
+
+function checkWin() {
+    if (parseInt(humanScore.textContent) >= 5) {
+        reset.appendChild(playAgainBtn);
+        disableBtns();
+        return "You Win, Let's GO!";
+    }
+    if (compScore.textContent >= 5) {
+        reset.appendChild(playAgainBtn);
+        disableBtns();
+        return "Computer Win! You sUcK!";
+    }
+    return '';
+}
+
+buttons.forEach(b => {
+    b.addEventListener('click', function (e) {
+        h1.textContent = playRound(e.target.textContent, computerPlay());
+        if (h1.textContent.toLocaleLowerCase().includes('win')) {
+            humanScore.textContent = parseInt(humanScore.textContent) + 1;
+        }
+        else if (h1.textContent.toLocaleLowerCase().includes('lose')) {
+            compScore.textContent = parseInt(compScore.textContent) + 1;
+        }
+        winner.textContent = checkWin()
+    })
+})
+
+playAgainBtn.addEventListener('click', function (e) {
+    resetGame();
+})
